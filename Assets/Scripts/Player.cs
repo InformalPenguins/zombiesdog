@@ -1,64 +1,83 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-	[SerializeField]
-	private float movementSpeed = 10;
+    [SerializeField]
+    private float movementSpeed = 10;
 
-	[SerializeField]
-	private float rotatingSpeed = 20;
+    [SerializeField]
+    private float rotatingSpeed = 20;
 
-	[SerializeField]
-	private Transform pistol;
+    [SerializeField]
+    private Transform pistol;
 
-	private Rigidbody myRigidBody;
+    [SerializeField]
+    private CoolCamera mainCamera;
 
-	private void Start ()
-	{
-		myRigidBody = GetComponent<Rigidbody> ();
-	}
+    private Rigidbody myRigidBody;
 
-	private void Update ()
-	{
-		float axisHorizontal = Input.GetAxis ("Horizontal");
-		float axisVertical = Input.GetAxis ("Vertical");
+    private void Start()
+    {
+        myRigidBody = GetComponent<Rigidbody>();
+    }
 
-		Movement (axisHorizontal, axisVertical);
-		Shoot (axisHorizontal, axisVertical);
-	}
+    private void Update()
+    {
+        float axisHorizontal = Input.GetAxis("Horizontal");
+        float axisVertical = Input.GetAxis("Vertical");
+        float axisCameraZoom = Input.GetAxis("CameraZoom");
+        float axisCameraHorizontal = Input.GetAxis("CameraHorizontal");
+        float axisCameraVertical = Input.GetAxis("CameraVertical");
 
-	private void Movement (float axisHorizontal, float axisVertical)
-	{
-		Vector3 newDir = Vector3.RotateTowards (transform.forward, new Vector3 (axisHorizontal, 0f, axisVertical), rotatingSpeed * Time.deltaTime, 0.0f);
-		transform.rotation = Quaternion.LookRotation (newDir);
+        Movement(axisHorizontal, axisVertical);
+        Shoot(axisHorizontal, axisVertical);
+        UpdateCamera(axisCameraZoom, axisCameraHorizontal, axisCameraVertical);
+    }
 
-		if (axisHorizontal != 0f) {
-			myRigidBody.velocity = new Vector3 (
-				axisHorizontal * movementSpeed,
-				myRigidBody.velocity.y,
-				myRigidBody.velocity.z
-			);
-		}
+    private void UpdateCamera(float axisCameraZoom, float axisCameraHorizontal, float axisCameraVertical)
+    {
+        mainCamera.UpdateCameraDistance(axisCameraZoom / 2);
+        mainCamera.UpdateCameraPosition(axisCameraHorizontal / 2, axisCameraVertical / 2);
+    }
 
-		if (axisVertical != 0f) {
-			myRigidBody.velocity = new Vector3 (
-				myRigidBody.velocity.x,
-				myRigidBody.velocity.y,
-				axisVertical * movementSpeed
-			);
-		}
-	}
+    private void Movement(float axisHorizontal, float axisVertical)
+    {
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, new Vector3(axisHorizontal, 0f, axisVertical), rotatingSpeed * Time.deltaTime, 0.0f);
+        transform.rotation = Quaternion.LookRotation(newDir);
 
-	private void Shoot (float axisHorizontal, float axisVertical)
-	{
-		if (Input.GetButton ("Jump")) {
-			GameObject bullet = pistol.GetComponent<Pistol> ().Bullet;
+        if (axisHorizontal != 0f)
+        {
+            myRigidBody.velocity = new Vector3(
+                axisHorizontal * movementSpeed,
+                myRigidBody.velocity.y,
+                myRigidBody.velocity.z
+            );
+        }
 
-			GameObject newBullet = Instantiate (bullet, pistol.position, Quaternion.identity) as GameObject;
+        if (axisVertical != 0f)
+        {
+            myRigidBody.velocity = new Vector3(
+                myRigidBody.velocity.x,
+                myRigidBody.velocity.y,
+                axisVertical * movementSpeed
+            );
+        }
+    }
 
-			newBullet.GetComponent<Rigidbody> ().AddForce (transform.forward * 500);
-		}
-	}
+    private void Shoot(float axisHorizontal, float axisVertical)
+    {
+        if (Input.GetButton("Jump"))
+        {
+            GameObject bullet = pistol.GetComponent<Pistol>().Bullet;
+
+            GameObject newBullet = Instantiate(bullet, pistol.position, Quaternion.identity) as GameObject;
+            Bullet bulletObj = newBullet.GetComponent<Bullet>();
+
+
+            newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletObj.MovementSpeed);
+        }
+    }
 }
