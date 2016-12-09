@@ -19,6 +19,9 @@ public class Player : MonoBehaviour
 
     private Rigidbody myRigidBody;
 
+    [SerializeField]
+    private Animator myAnimator;
+
     private void Start()
     {
         myRigidBody = GetComponent<Rigidbody>();
@@ -65,6 +68,8 @@ public class Player : MonoBehaviour
                 axisVertical * movementSpeed
             );
         }
+
+        myAnimator.SetBool("IsRunning", axisHorizontal != 0f || axisVertical != 0f);
     }
 
     private void Shoot(float axisHorizontal, float axisVertical)
