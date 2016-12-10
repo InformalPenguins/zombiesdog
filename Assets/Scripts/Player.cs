@@ -6,10 +6,13 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float movementSpeed = 10;
+    private float movementSpeed = 10f;
 
     [SerializeField]
-    private float rotatingSpeed = 20;
+    private float rotatingSpeed = 20f;
+
+    [SerializeField]
+    private float jumpForce = 20f;
 
     [SerializeField]
     private Transform pistol;
@@ -21,6 +24,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private Animator myAnimator;
+
+    private bool isGrounded;
 
     private void Start()
     {
@@ -34,9 +39,12 @@ public class Player : MonoBehaviour
         float axisCameraZoom = Input.GetAxis("CameraZoom");
         float axisCameraHorizontal = Input.GetAxis("CameraHorizontal");
         float axisCameraVertical = Input.GetAxis("CameraVertical");
+        bool isAttackButton = Input.GetButton("Attack");
+        bool isJumpButton = Input.GetButton("Jump");
 
         Movement(axisHorizontal, axisVertical);
-        Shoot(axisHorizontal, axisVertical);
+        Shoot(isAttackButton);
+        Jump(isJumpButton);
         UpdateCamera(axisCameraZoom, axisCameraHorizontal, axisCameraVertical);
     }
 
@@ -72,9 +80,9 @@ public class Player : MonoBehaviour
         myAnimator.SetBool("IsRunning", axisHorizontal != 0f || axisVertical != 0f);
     }
 
-    private void Shoot(float axisHorizontal, float axisVertical)
+    private void Shoot(bool attack)
     {
-        if (Input.GetButton("Jump"))
+        if (attack)
         {
             GameObject bullet = pistol.GetComponent<Pistol>().Bullet;
 
@@ -83,6 +91,14 @@ public class Player : MonoBehaviour
 
 
             newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletObj.MovementSpeed);
+        }
+    }
+
+    private void Jump(bool jump)
+    {
+        if (jump)
+        {
+            myRigidBody.AddForce(transform.up * jumpForce);
         }
     }
 }

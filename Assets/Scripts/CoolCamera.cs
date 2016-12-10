@@ -6,16 +6,16 @@ using UnityEngine;
 public class CoolCamera : MonoBehaviour
 {
     [SerializeField]
-    private float dampTime = 0.15f;
+    private float dampTime = 0.25f;
 
     [SerializeField]
-    private float distanceFromTarget = 10f;
+    private float distanceFromTarget = 20f;
 
     [SerializeField]
-    private float maxDistance = 30f;
+    private float maxDistance = 50f;
 
     [SerializeField]
-    private float minDistance = 10f;
+    private float minDistance = 5f;
 
     [SerializeField]
     private Transform target;
@@ -37,8 +37,6 @@ public class CoolCamera : MonoBehaviour
         }
     }
 
-    private float variable = 0f;
-
     void Start()
     {
         myCamera = GetComponent<UnityEngine.Camera>();
@@ -46,7 +44,6 @@ public class CoolCamera : MonoBehaviour
 
     void Update()
     {
-        Vector3 point = myCamera.WorldToViewportPoint(target.position);
         Vector3 delta = target.position - myCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, distanceFromTarget));
 
         Vector3 destination = transform.position + delta;

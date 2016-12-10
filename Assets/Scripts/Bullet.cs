@@ -10,6 +10,9 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private float movementSpeed = 50f;
 
+    [SerializeField]
+    private Transform onDestroyEmitter;
+
     public float MovementSpeed
     {
         get
@@ -26,5 +29,22 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         Destroy(gameObject, ttl);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        switch (other.gameObject.layer)
+        {
+            case 8: // terrain
+            case 9: // buildings
+                DestroyWithEmitter();
+                break;
+        }
+    }
+
+    private void DestroyWithEmitter()
+    {
+        Instantiate(onDestroyEmitter, transform.position, Quaternion.identity, null);
+        Destroy(gameObject);
     }
 }
