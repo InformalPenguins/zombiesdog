@@ -26,7 +26,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1288901060260748
 GameObject:
@@ -43,7 +43,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1404384076976520
 GameObject:
@@ -60,7 +60,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1670025804908838
 GameObject:
@@ -71,12 +71,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4930523189247636}
   - component: {fileID: 65726383021416710}
+  - component: {fileID: 208874272712999696}
   m_Layer: 9
   m_Name: House_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1900844553427536
 GameObject:
@@ -93,7 +94,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4482208075252888
 Transform:
@@ -140,8 +141,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1670025804908838}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -17.814663, y: 7.9492927, z: -13.38285}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -40.56685, y: 202.87569, z: -234.40259}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4613109737142614}
@@ -332,3 +333,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10.25248, y: 5.9406595, z: 19.596706}
   m_Center: {x: -5.049085, y: -4.9223776, z: -0.26186228}
+--- !u!208 &208874272712999696
+NavMeshObstacle:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1670025804908838}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 5, y: 2.5, z: 10}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -5, y: -5.23, z: -0.24}
+  m_TimeToStationary: 0.5

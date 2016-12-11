@@ -1,47 +1,95 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
-    private float sightDistance;
+    private float wanderSpeed = 0.5f;
 
-    // Use this for initialization
+    [SerializeField]
+    private float walkSpeed = 2f;
+
+    [SerializeField]
+    private float runSpeed = 7f;
+
+    [SerializeField]
+    private float sightDistance = 10f;
+
+    [SerializeField]
+    private float chaseDistance = 5f;
+
+    [SerializeField]
+    private float wanderRadius = 10f;
+
+    [SerializeField]
+    private float wanderTimer = 2f;
+
+    private float timer;
+
+    [SerializeField]
+    private Transform target;
+
+    private NavMeshAgent navMeshComponent;
+
     void Start()
     {
-
+        navMeshComponent = GetComponent<NavMeshAgent>();
     }
 
     void Update()
     {
-        GetComponent<Renderer>().material.color = new Color(0f, 0f, 0f);
+        float distance = Vector3.Distance(target.position, transform.position);
 
-        RaycastHit hit;
-        if (Physics.SphereCast(transform.position, 2f, transform.forward, out hit, sightDistance))
+        if (distance > sightDistance)
         {
-            if (hit.transform.tag == "Player")
-            {
-                GetComponent<Renderer>().material.color = new Color(100f, 100f, 100f);
-                Debug.Log("hit " + hit.transform.gameObject.name);
-                Debug.DrawRay(new Vector3(transform.position.x, 2f, transform.position.z), hit.transform.localPosition, Color.cyan);
-            }
+            WanderAround();
+            GetComponent<Renderer>().material.color = Color.white;
+        }
+
+        if (distance < sightDistance && distance > chaseDistance)
+        {
+            Investigate();
+            GetComponent<Renderer>().material.color = Color.yellow;
+        }
+
+        if (distance < chaseDistance)
+        {
+            Chase();
+            GetComponent<Renderer>().material.color = Color.red;
         }
     }
 
+    private void WanderAround()
+    {
+        timer += Time.deltaTime;
 
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    RaycastHit[] hits;
-    //    hits = Physics.SphereCastAll(transform.position, sightDistance, transform.forward);
+        if (timer > wanderTimer)
+        {
+            navMeshComponent.SetDestination(GetRandomPoint());
+            navMeshComponent.speed = wanderSpeed;
+            timer = 0;
+        }
+    }
 
-    //    for (int i = 0; i < hits.Length; i++)
-    //    {
-    //        RaycastHit hit = hits[i];
-    //        Debug.Log("hit " + hit.transform.gameObject.name);
+    private void Investigate()
+    {
+        navMeshComponent.Resume();
+        navMeshComponent.SetDestination(target.position);
+        navMeshComponent.speed = walkSpeed;
+    }
 
-    //        Debug.DrawRay(transform.position, hit.transform.position, Color.cyan);
-    //    }
-    //}
+    private void Chase()
+    {
+        navMeshComponent.SetDestination(target.position);
+        navMeshComponent.speed = runSpeed;
+    }
+
+    private Vector3 GetRandomPoint()
+    {
+        Vector3 rand = Random.insideUnitSphere * wanderRadius;
+        rand += transform.position;
+        return rand;
+    }
 }
