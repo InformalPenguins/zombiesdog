@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
-    private float wanderSpeed = 0.5f;
+    private float wanderSpeed = 2f;
 
     [SerializeField]
     private float walkSpeed = 2f;
@@ -15,10 +13,7 @@ public class Enemy : MonoBehaviour
     private float runSpeed = 7f;
 
     [SerializeField]
-    private float sightDistance = 10f;
-
-    [SerializeField]
-    private float chaseDistance = 5f;
+    private float chaseDistance = 15f;
 
     [SerializeField]
     private float wanderRadius = 10f;
@@ -26,38 +21,38 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float wanderTimer = 2f;
 
-    private float timer;
-
-    [SerializeField]
-    private Transform target;
-
     private NavMeshAgent navMeshComponent;
+
+    private FieldOfView fieldOfView;
+
+    private float timer;
 
     void Start()
     {
         navMeshComponent = GetComponent<NavMeshAgent>();
+        fieldOfView = GetComponent<FieldOfView>();
     }
 
     void Update()
     {
-        float distance = Vector3.Distance(target.position, transform.position);
-
-        if (distance > sightDistance)
+        if (fieldOfView.VisibleTargets.Count == 0)
         {
             WanderAround();
-            GetComponent<Renderer>().material.color = Color.white;
         }
-
-        if (distance < sightDistance && distance > chaseDistance)
+        else
         {
-            Investigate();
-            GetComponent<Renderer>().material.color = Color.yellow;
-        }
+            Transform target = fieldOfView.VisibleTargets[0];
 
-        if (distance < chaseDistance)
-        {
-            Chase();
-            GetComponent<Renderer>().material.color = Color.red;
+            float distance = Vector3.Distance(target.position, transform.position);
+
+            if (distance > chaseDistance)
+            {
+                Investigate(target);
+            }
+            else
+            {
+                Chase(target);
+            }
         }
     }
 
@@ -71,19 +66,23 @@ public class Enemy : MonoBehaviour
             navMeshComponent.speed = wanderSpeed;
             timer = 0;
         }
+
+        GetComponent<Renderer>().material.color = Color.white;
     }
 
-    private void Investigate()
+    private void Investigate(Transform target)
     {
         navMeshComponent.Resume();
         navMeshComponent.SetDestination(target.position);
         navMeshComponent.speed = walkSpeed;
+        GetComponent<Renderer>().material.color = Color.yellow;
     }
 
-    private void Chase()
+    private void Chase(Transform target)
     {
         navMeshComponent.SetDestination(target.position);
         navMeshComponent.speed = runSpeed;
+        GetComponent<Renderer>().material.color = Color.red;
     }
 
     private Vector3 GetRandomPoint()
@@ -91,5 +90,10 @@ public class Enemy : MonoBehaviour
         Vector3 rand = Random.insideUnitSphere * wanderRadius;
         rand += transform.position;
         return rand;
+    }
+
+    public bool HasTargets()
+    {
+        return fieldOfView.VisibleTargets.Count > 0;
     }
 }
