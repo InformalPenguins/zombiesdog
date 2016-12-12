@@ -14,29 +14,21 @@ public class CoolCamera : MonoBehaviour
     [SerializeField]
     private float minDistance = 5f;
 
-    [SerializeField]
     private Transform target;
 
     private UnityEngine.Camera myCamera;
 
     private Vector3 velocity = Vector3.zero;
 
-    public float DistanceFromTarget
-    {
-        get
-        {
-            return distanceFromTarget;
-        }
-
-        set
-        {
-            distanceFromTarget = value;
-        }
-    }
-
     void Start()
     {
         myCamera = GetComponent<UnityEngine.Camera>();
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
+    private void Awake()
+    {
+        transform.Rotate(Vector3.right, 1);
     }
 
     void Update()
@@ -62,6 +54,14 @@ public class CoolCamera : MonoBehaviour
         if (newValue < maxDistance && newValue > minDistance)
         {
             distanceFromTarget = newValue;
+        }
+    }
+
+    public float DistanceFromTarget
+    {
+        get
+        {
+            return distanceFromTarget;
         }
     }
 }

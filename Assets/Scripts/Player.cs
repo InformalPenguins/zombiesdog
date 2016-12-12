@@ -14,7 +14,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Transform pistol;
 
-    [SerializeField]
     private CoolCamera mainCamera;
 
     private Rigidbody myRigidBody;
@@ -24,9 +23,13 @@ public class Player : MonoBehaviour
 
     private bool isGrounded;
 
+    [SerializeField]
+    private Light shootLight;
+
     private void Start()
     {
         myRigidBody = GetComponent<Rigidbody>();
+        mainCamera = Camera.main.GetComponent<CoolCamera>();
     }
 
     private void Update()
@@ -88,6 +91,8 @@ public class Player : MonoBehaviour
 
 
             newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletObj.MovementSpeed);
+
+            shootLight.enabled = true;
         }
     }
 
